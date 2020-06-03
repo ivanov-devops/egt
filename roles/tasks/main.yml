@@ -1,0 +1,26 @@
+- name: create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: app-user
+    group: app-user
+    mode: 0775
+    recurse: yes
+  with_items:
+    - /app
+    # - /app/mysql/data  if we want persistent db
+    # - /app/mysql/conf  if we want persistent db
+
+- name: Copy docker-compose files and conf
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner }}"
+  with_items:
+    # - { src: 'conf/mysql.cnf',dest: '/vagrant/mysql/conf/mysql.cnf', owner: 'vagrant'} # if we have
+    - { src: 'docker-compose.yml',dest: '/vagrant/mysql/docker-compose.yml', owner: 'app-user'}
+    # - { src: 'env',dest: '/vagrant/mysql/.env', owner: 'app-user'} # if we have env file
+
+- name: run the service defined in docker-compose.yml
+  docker_compose:
+    project_src: /app

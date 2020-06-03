@@ -1,0 +1,50 @@
+version: '3.7'
+
+services:
+  api:
+    image: api:1.0
+    build: ./api
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - app
+
+  web:
+    image: web:1.0
+    build: ./web
+    ports:
+      - "3000:3000"
+    restart: always
+    environment:
+      API_HOST: http://api:8080
+# For development, active the mount, so every change you make on the
+# host will be shown in the container
+#    volumes:
+#      - ./web:/usr/src/app
+    depends_on:
+      - api
+      - db
+    networks:
+      - app
+
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: springboot_mysql_example
+      MYSQL_USER: newuser
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - app
+
+volumes:
+  db-data:
+
+networks:
+   app:

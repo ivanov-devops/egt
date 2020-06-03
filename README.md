@@ -40,3 +40,20 @@ If you have done everything right - the result would be a nyan cat showing on th
 7. Provide us with a copy of the repository via email and present a working solution on the technical interview
 
 ### Time needed: ~5days
+
+
+-------------------------
+
+## Prerequisites
+* docker
+* docker-compose
+* npm (needed only for localdev)
+
+
+## Setup for localdev
+* Clone the repository
+* make init
+
+> For localdev you may need to active the volume mount lines in the docker-compose file.
+> That will allow you to see any changes made to the nodejs in realtime without the need
+> to restart ot rebuild the container

@@ -1,0 +1,45 @@
+pipeline {
+    environment {
+        NEXUS_VERSION = "nexus3"
+        NEXUS_GROUP = "sp.sd"
+        NEXUS_PROTOCOL = "http"
+        NEXUS_URL = "172.17.0.3:8081"
+        NEXUS_REPOSITORY = "repository-example"
+        NEXUS_CREDENTIAL_ID = "nexus-credentials"
+    }
+
+
+        stages {
+            stage("clone code") {
+                steps {
+                    script {
+                        git 'https://github.com/egt/node.git';
+                    }
+        }
+
+        stage("npm install") {
+            steps {
+                script {
+                    npm install
+                }
+            }
+        }
+
+        stage("Publish") {
+            steps {
+                script {
+                    nexusArtifactUploader(
+                        nexusVersion: NEXUS_VERSION,
+                        protocol: NEXUS_PROTOCOL,
+                        nexusUrl: NEXUS_URL,
+                        groupId: NEXUS_GROUP,
+                        version: NEXUS_VERSION,
+                        repository: NEXUS_REPOSITORY,
+                        credentialsId: NEXUS_CREDENTIAL_ID,
+                        artifacts: [
+                            [artifactId: 'nodejs-artifact',
+                            classifier: '',
+                            file: '/path/to/artifact',
+                            type: 'type'],
+                        ]
+                    );
